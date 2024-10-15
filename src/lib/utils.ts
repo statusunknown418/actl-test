@@ -51,21 +51,4 @@ export class URLShortener {
 
     return decoded;
   }
-
-  string2Number(str: string) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash); // A simple hash algorithm
-    }
-    return Math.abs(hash); // Ensure the hash is a positive number
-  }
-
-  number2String(num: number) {
-    let str = "";
-    while (num > 0) {
-      str = this.alphabet.charAt(num % this.base) + str;
-      num = Math.floor(num / this.base);
-    }
-    return str;
-  }
 }

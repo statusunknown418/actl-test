@@ -15,6 +15,7 @@ export const linksRouter = createTRPCRouter({
           .insert(links)
           .values({
             ...input,
+            // Hardcoded value for page UI
             createdBy: "test-user",
           })
           .returning(),
@@ -32,9 +33,11 @@ export const linksRouter = createTRPCRouter({
 
       try {
         const urlShortener = new URLShortener();
+        // We know the link was created, so safely assume it's there
         const newId = newLink.value[0]!.id;
         const shortened = urlShortener.encode(newId);
 
+        // If the meta has failed, we just use the default title
         const title =
           metadata.status === "fulfilled"
             ? (metadata.value.title as string)
@@ -84,6 +87,7 @@ export const linksRouter = createTRPCRouter({
   }),
   getMostRecent: publicProcedure.query(({ ctx }) => {
     return ctx.db.query.links.findMany({
+      // Assuming the user was the one who created the link and not the `seed.ts` file
       where: (t, op) => op.isNotNull(t.createdBy),
       orderBy: (t, op) => op.desc(t.createdAt),
       limit: 10,
